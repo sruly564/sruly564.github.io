@@ -1,133 +1,81 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <title>Advanced Survival Game</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+  <title>Investment Growth Calculator</title>
+  <link href="./a.css" rel="stylesheet" />
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <div class="container">
+    <h1>Investment Growth Calculator</h1>
+    <hr />
+    <main>
+      <form id="form">
+        <div class="form-group">
+          <label for="initial">Initial Investment:</label>
+          <input type="number" id="initial" value="0" />
+          <span class="tooltip">Enter the initial amount you are investing.</span>
+        </div>
+        <div class="form-group">
+          <label for="increase">Annual Increase (%):</label>
+          <input type="number" id="increase" value="0" />
+          <span class="tooltip">Enter the expected annual percentage increase in your investment.</span>
+        </div>
+        <div class="form-group">
+          <label for="years">Investment Period (Years):</label>
+          <input type="number" id="years" value="0" />
+          <span class="tooltip">Enter the number of years you plan to invest for.</span>
+        </div>
+        <div class="form-group">
+          <label for="add">Additional Contributions:</label>
+          <input type="number" id="add" value="0" />
+          <span class="tooltip">Enter any additional contributions you plan to make each year.</span>
+        </div>
+        <div class="form-group">
+          <label for="start">Start Year:</label>
+          <input type="number" id="start" value="1" />
+          <span class="tooltip">Enter the year in which you will start investing.</span>
+        </div>
+        <div class="form-group">
+          <label for="end">End Year:</label>
+          <input type="number" id="end" value="0" />
+          <span class="tooltip">Enter the year in which you plan to withdraw your investment.</span>
+        </div>
+        <div class="form-group">
+          <label for="dmy">Compounding Frequency:</label>
+          <select id="dmy">
+            <option value="yearly">Yearly</option>
+            <option value="monthly">Monthly</option>
+            <option value="daily">Daily</option>
+          </select>
+          <span class="tooltip">Select how often your investment will compound.</span>
+        </div>
+        <div class="form-group">
+          <label for="currency">Currency:</label>
+          <select id="currency">
+            <option value="USD">US Dollar</option>
+            <option value="EUR">Euro</option>
+            <option value="GBP">British Pound</option>
+          </select>
+          <span class="tooltip">Select the currency in which you want to see the result.</span>
+        </div>
+        <div class="form-group">
+          <label for="investment-type">Investment Type:</label>
+          <select id="investment-type">
+            <option value="stocks">Stocks</option>
+            <option value="bonds">Bonds</option>
+            <option value="mutual-funds">Mutual Funds</option>
+          </select>
+          <span class="tooltip">Select the type of investment you are considering.</span>
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="submit">Calculate</button>
+          <button type="reset" id="reset">Reset</button>
+        </div>
+      </form>
+      <br />
+      <div id="res"></div>
+    </main>
+  </div>
 
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-
-    // Game constants
-    const GAME_WIDTH = 800;
-    const GAME_HEIGHT = 600;
-    const PLAYER_SIZE = 32;
-    const ENEMY_SIZE = 32;
-    const ENEMY_COUNT = 10;
-
-    // Game variables
-    let player = {
-      x: GAME_WIDTH / 2,
-      y: GAME_HEIGHT / 2,
-      width: PLAYER_SIZE,
-      height: PLAYER_SIZE,
-      speed: 5,
-    };
-
-    let enemies = [];
-
-    let score = 0;
-    let gameOver = false;
-
-    // Create enemies
-    for (let i = 0; i < ENEMY_COUNT; i++) {
-      enemies.push({
-        x: Math.random() * GAME_WIDTH,
-        y: Math.random() * GAME_HEIGHT,
-        width: ENEMY_SIZE,
-        height: ENEMY_SIZE,
-        speed: Math.random() * 3 + 1,
-      });
-    }
-
-    // Event listeners
-    window.addEventListener('keydown', (e) => {
-      switch (e.keyCode) {
-        case 37: // Left arrow
-          player.x -= player.speed;
-          break;
-        case 38: // Up arrow
-          player.y -= player.speed;
-          break;
-        case 39: // Right arrow
-          player.x += player.speed;
-          break;
-        case 40: // Down arrow
-          player.y += player.speed;
-          break;
-      }
-    });
-
-    // Game loop
-    function gameLoop() {
-      // Clear the canvas
-      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
-      // Draw the player
-      ctx.fillStyle = 'red';
-      ctx.fillRect(player.x, player.y, player.width, player.height);
-
-      // Draw the enemies
-      ctx.fillStyle = 'black';
-      enemies.forEach((enemy) => {
-        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-      });
-
-      // Update the player's position
-      player.x += player.speed * Math.cos(player.angle);
-      player.y += player.speed * Math.sin(player.angle);
-
-      // Update the enemies' positions
-      enemies.forEach((enemy) => {
-        enemy.x += enemy.speed * Math.cos(enemy.angle);
-        enemy.y += enemy.speed * Math.sin(enemy.angle);
-      });
-
-      // Check for collisions
-      enemies.forEach((enemy) => {
-        if (player.x < enemy.x + enemy.width &&
-            player.x + player.width > enemy.x &&
-            player.y < enemy.y + enemy.height &&
-            player.y + player.height > enemy.y) {
-          gameOver = true;
-        }
-      });
-
-      // Update the score
-      score++;
-
-      // Draw the score
-      ctx.fillStyle = 'white';
-      ctx.font = '24px Arial';
-      ctx.fillText('Score: ' + score, 10, 20);
-
-      // Check if the game is over
-      if (gameOver) {
-        ctx.fillStyle = 'black';
-        ctx.font = '48px Arial';
-        ctx.fillText('Game over', GAME_WIDTH / 2 - 100, GAME_HEIGHT / 2);
-      } else {
-        requestAnimationFrame(gameLoop);
-      }
-    }
-
-    // Start the game loop
-    gameLoop();
-  </script>
+  <script src="./a.js"></script>
 </body>
 </html>
