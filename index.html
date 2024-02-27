@@ -1,81 +1,68 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Investment Growth Calculator</title>
-  <link href="./a.css" rel="stylesheet" />
+  <title>Simple Website with Database</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Investment Growth Calculator</h1>
-    <hr />
-    <main>
-      <form id="form">
-        <div class="form-group">
-          <label for="initial">Initial Investment:</label>
-          <input type="number" id="initial" value="0" />
-          <span class="tooltip">Enter the initial amount you are investing.</span>
-        </div>
-        <div class="form-group">
-          <label for="increase">Annual Increase (%):</label>
-          <input type="number" id="increase" value="0" />
-          <span class="tooltip">Enter the expected annual percentage increase in your investment.</span>
-        </div>
-        <div class="form-group">
-          <label for="years">Investment Period (Years):</label>
-          <input type="number" id="years" value="0" />
-          <span class="tooltip">Enter the number of years you plan to invest for.</span>
-        </div>
-        <div class="form-group">
-          <label for="add">Additional Contributions:</label>
-          <input type="number" id="add" value="0" />
-          <span class="tooltip">Enter any additional contributions you plan to make each year.</span>
-        </div>
-        <div class="form-group">
-          <label for="start">Start Year:</label>
-          <input type="number" id="start" value="1" />
-          <span class="tooltip">Enter the year in which you will start investing.</span>
-        </div>
-        <div class="form-group">
-          <label for="end">End Year:</label>
-          <input type="number" id="end" value="0" />
-          <span class="tooltip">Enter the year in which you plan to withdraw your investment.</span>
-        </div>
-        <div class="form-group">
-          <label for="dmy">Compounding Frequency:</label>
-          <select id="dmy">
-            <option value="yearly">Yearly</option>
-            <option value="monthly">Monthly</option>
-            <option value="daily">Daily</option>
-          </select>
-          <span class="tooltip">Select how often your investment will compound.</span>
-        </div>
-        <div class="form-group">
-          <label for="currency">Currency:</label>
-          <select id="currency">
-            <option value="USD">US Dollar</option>
-            <option value="EUR">Euro</option>
-            <option value="GBP">British Pound</option>
-          </select>
-          <span class="tooltip">Select the currency in which you want to see the result.</span>
-        </div>
-        <div class="form-group">
-          <label for="investment-type">Investment Type:</label>
-          <select id="investment-type">
-            <option value="stocks">Stocks</option>
-            <option value="bonds">Bonds</option>
-            <option value="mutual-funds">Mutual Funds</option>
-          </select>
-          <span class="tooltip">Select the type of investment you are considering.</span>
-        </div>
-        <div class="form-actions">
-          <button type="submit" id="submit">Calculate</button>
-          <button type="reset" id="reset">Reset</button>
-        </div>
-      </form>
-      <br />
-      <div id="res"></div>
-    </main>
-  </div>
 
-  <script src="./a.js"></script>
+  <h1>Welcome to My Website</h1>
+
+  <form action="process.php" method="post">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name">
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email">
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <?php
+    // Connect to the database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "my_database";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Insert data into the database
+    if (isset($_POST['name']) && isset($_POST['email'])) {
+      $name = $_POST['name'];
+      $email = $_POST['email'];
+
+      $sql = "INSERT INTO users (name, email) VALUES ('$name', '$email')";
+
+      if ($conn->query($sql) === TRUE) {
+        echo "<p>New record created successfully</p>";
+      } else {
+        echo "<p>Error: " . $sql . "<br>" . $conn->error . "</p>";
+      }
+    }
+
+    // Retrieve data from the database
+    $sql = "SELECT * FROM users";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      echo "<h2>Users:</h2>";
+      echo "<ul>";
+      while($row = $result->fetch_assoc()) {
+        echo "<li>" . $row["name"] . " - " . $row["email"] . "</li>";
+      }
+      echo "</ul>";
+    } else {
+      echo "<p>No users found</p>";
+    }
+
+    // Close the database connection
+    $conn->close();
+  ?>
+
 </body>
 </html>
