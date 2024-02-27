@@ -1,68 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Simple Website with Database</title>
+  <title>Zoho Creator Form</title>
 </head>
 <body>
-
-  <h1>Welcome to My Website</h1>
-
-  <form action="./process.php" method="post">
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name">
-
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email">
-
+  <h1>Work Order Form</h1>
+  <form action="https://creator.zoho.com/api/apps/ww/work_orders" method="POST">
+    <label for="customer_name">Customer Name:</label>
+    <input type="text" id="customer_name" name="Customer_Name">
+    <br>
+    <label for="work_order_description">Work Order Description:</label>
+    <textarea id="work_order_description" name="Work_Order_Description"></textarea>
+    <br>
+    <label for="priority">Priority:</label>
+    <select id="priority" name="Priority">
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+    <br>
+    <label for="status">Status:</label>
+    <select id="status" name="Status">
+      <option value="New">New</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+    <br>
     <input type="submit" value="Submit">
   </form>
-
-  <?php
-    // Connect to the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "my_database";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Insert data into the database
-    if (isset($_POST['name']) && isset($_POST['email'])) {
-      $name = $_POST['name'];
-      $email = $_POST['email'];
-
-      $sql = "INSERT INTO users (name, email) VALUES ('$name', '$email')";
-
-      if ($conn->query($sql) === TRUE) {
-        echo "<p>New record created successfully</p>";
-      } else {
-        echo "<p>Error: " . $sql . "<br>" . $conn->error . "</p>";
-      }
-    }
-
-    // Retrieve data from the database
-    $sql = "SELECT * FROM users";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-      echo "<h2>Users:</h2>";
-      echo "<ul>";
-      while($row = $result->fetch_assoc()) {
-        echo "<li>" . $row["name"] . " - " . $row["email"] . "</li>";
-      }
-      echo "</ul>";
-    } else {
-      echo "<p>No users found</p>";
-    }
-
-    // Close the database connection
-    $conn->close();
-  ?>
-
 </body>
 </html>
