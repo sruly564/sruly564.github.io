@@ -1,7 +1,7 @@
 <?php
 
 // Set the target URL for the POST request
-$targetUrl = "https://creatorapp.zoho.com/thekalco/ww#work_orders";
+$targetUrl = "https://creatorapp.zoho.com/thekalco/ww#Report:work_orders_Report";
 
 // Set the data to be sent in the POST request
 $data = array(
